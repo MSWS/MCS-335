@@ -1,0 +1,163 @@
+\documentclass[10pt]{article}
+
+\usepackage[tmargin=0.2in, bmargin=0.25in, lmargin = 0.1in, rmargin = 0.25in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{pstricks}
+\usepackage{calc}
+
+\begin{document}
+
+
+\begin{multicols*}{2}
+    \begin{minipage}{\columnwidth}
+        \subsection*{Optimal Rays}
+        \begin{tabular}{c|ccccc}
+            -9 & 0 & 1 & 0 & 0  & 0 \\
+            \hline
+            2  & 1 & 1 & 1 & -1 & 0 \\
+            6  & 0 & 1 & 2 & -1 & 1
+        \end{tabular}
+        \columnbreak
+        Since \(x_4\) has \(c_k = 0, \forall a_{ik} \leq 0\), we know there is an optimal ray.
+        \begin{enumerate}
+            \item \(x_2, x_3\) are non-basic and not our optimal ray column, so set those to 0 and solve for the basic variable.
+                  \begin{align*}
+                      2 = x_1 + x_2 -x_4 \rightarrow x_1 = 2 + x_4 \\
+                      6 = x_2 + 2x_3 - x_4 \rightarrow x_5 = 6 + x_4
+                  \end{align*}
+            \item Set \(x_4 = t, t \geq 0\)
+            \item We get
+                  \begin{align*}
+                      \overline{x}(t) & = [2 + t, 0, 0, t, 6 + t], t \geq 0             \\
+                                      & = [2, 0, 0, 0, 6] + t [1, 0, 0, 1, 1], t \geq 0
+                  \end{align*}
+                  which is an \textbf{optimal ray}.
+        \end{enumerate}
+        Pivoting in \(x_3\):
+
+        \begin{tabular}{c|ccccc}
+            -9 & 0 & 1 & 0 & 0  & 0 \\
+            \hline
+            2  & 1 & 1 & 1 & -1 & 0 \\
+            6  & 0 & 1 & 2 & 1  & 1
+        \end{tabular}
+        We \textit{can} still pivot on \(x_4\), but first our BFS \(\overline{x}_1^* = [0, 0, 2, 0, 2]\).
+
+        Now, pivoting gets us
+
+        \begin{tabular}{c|ccccc}
+            -9 & 0  & 1  & 0 & 0 & 0 \\
+            \hline
+            4  & -1 & 0  & 1 & 0 & 1 \\
+            2  & -2 & -1 & 0 & 1 & 1
+        \end{tabular}
+
+        This BFS \(\overline{x}_2^* = [0, 0, 4, 2, 0]\), which is \(\neq \overline{x}_1^*\).
+        We also have an \textit{optimal ray} here, so following the process above...
+
+        Set \(x_2 = x_5 = 0\), solve for \(x_3\) and \(x_4\) respectively.
+        \begin{align*}
+            x_3 & = 4 + x_1  \\
+            x_4 & = 2 + 2x_1
+        \end{align*}
+        Set \(x_1 = t, t \geq 0\)
+        \begin{align*}
+            \overline{x}(t) & = [t, 0, 4 + t, 2 + 2t, 0], t \geq 0            \\
+                            & = [0, 0, 4, 2, 0] + t [1, 0, 1, 2, 0], t \geq 0
+        \end{align*}
+        So we've found all possible BFS and optimal rays.
+        Thus, our \textbf{optimal set} is
+        \textit{all possible convex combinations of pair of points from edges}
+        \([\overline{x}_0^*, \overline{x}_1^*]\) and \([\overline{x}_1^*, \overline{x}_2^*]\)
+        and optimal rays \(\overline{x}_0^* + t[1, 0, 0, 1, 1]\) and \(\overline{x}_2^* + t[1, 0, 1, 2, 0]\) with \(t \geq 0\).
+        \subsection*{Graphing}
+        \begin{minipage}{0.4\columnwidth}
+            \begin{tabular}{c|cccccc}
+                * & * & * & *  & * & * & *  \\
+                \hline
+                2 & 0 & 2 & 1  & 1 & 0 & -1 \\
+                8 & 0 & 4 & -2 & 0 & 1 & 1  \\
+                6 & 1 & 1 & 2  & 0 & 0 & 1
+            \end{tabular}
+        \end{minipage}
+        \columnbreak
+        \begin{minipage}{0.7\columnwidth}
+            \begin{enumerate}
+                \item Pick non-basic var to use as vert axis.
+                \item Solve equations for basic variable.
+                \item Set that equation to = 0.
+            \end{enumerate}
+        \end{minipage}
+        \begin{align*}
+            2   & = 2x_2 + x_3 + x_4 - x_6                \\
+            x_4 & = 2 - 2x_2 - x_3 + x_6 \mathbf{= 0}     \\
+            x_6 & = 2x_2 + x_3 + x_4 - 2                  \\
+            % & \vdots                                  \\
+                & \mathrel{\makebox[\widthof{=}]{\vdots}} \\
+            x_6 & = 8 - 4x_2 + 2x_3                       \\
+            x_6 & = 6 - x_2 - 2x_3
+        \end{align*}
+        Good Luck! - Isaac Boaz \today
+    \end{minipage}
+    \columnbreak \\
+    \begin{minipage}{\columnwidth}
+        \subsection*{Subproblem Technique}
+        \begin{enumerate}
+            \item Pivot to get \(I_m\) with 0s in the OF row.
+                  \begin{itemize}
+                      \item If you get a row of 0s, delete and continue
+                      \item If you get a row with \(b_i \neq 0\) and \(a_{ik} = 0\) for all \(k\) - Infeasible Form 1
+                  \end{itemize}
+                  Once you have \(I_m\) with 0s in the OF row, you're done with Step 0.
+                  \\
+                  Either you're in CF or not.
+                  \begin{itemize}
+                      \item If CF, done with step 1.
+                      \item If not, some \(b_i < 0\).
+                  \end{itemize}
+            \item Try to get all \(b_i \geq 0\) \\
+                  If \textit{all} \(b_i < 0\), pick \textit{any negative} entry in any row and pivot. You will now have some \(b_i > 0\).
+                  \begin{itemize}
+                      \item If some \(b_i < 0\) and all \(a_{ik} \geq 0\) - Infeasible Form 2
+                  \end{itemize}
+            \item Now you should have at least one row with \(b_i \geq 0\) and
+                  at least one row with \(b_i < 0\). Form the subproblem and pivot
+                  to either optimal/unbounded form or until \(b_i\) becomes non-negative.
+                  Make sure you zero-out the entire column when you pivot, so at the end you
+                  still have \(I_m\) with 0s in OF row.
+                  \begin{itemize}
+                      \item If optimal form for subproblem and \(b_i < 0\) - Infeasible Form 2
+                      \item If optimal form for subproblem and \(b_i \geq 0\), you have one fewer \(b_i < 0\). Form a new subproblem for any \(b_i < 0\), otherwise you're now in CF.
+                      \item If unbounded form for subproblem and \(b_i < 0\), then pivot on a \textit{negative} entry of the subproblem OF in an unbounded column.
+                  \end{itemize}
+        \end{enumerate}
+        \subsection*{Artificial Variables}
+        \begin{enumerate}
+            \item Get \(\overline{b} \geq \overline{0}\) \\
+                  Multiply any rows with \(b_i < 0\) by -1.
+            \item Get \(I_m\)
+                  \begin{itemize}
+                      \item Add \textbf{artificial vars} \(y_i\) as need to get \(I_m\).
+                      \item Zero out the artificial OF row.
+                      \item Perform simplex algorithm on artificial problem.
+                      \item If optimal artificial OF value > 0, then infeasible.
+                      \item If optimal artificial OF value < 0, you did something wrong.
+                      \item If optimal artificial OF value = 0, there are two cases:
+                            \begin{enumerate}[label=(\roman*)]
+                                \item All artificial vars are non-basic. \\
+                                      Delete artificial OF row and replace original OF row. \\
+                                      Delete columns corresponding to artificial vars.
+                                      \textbf{Zero out the original OF row.}
+                                \item At least one artificial var is basic. \\
+                                      Pivot in any \(x_j\) column in the row corresponding to the var with non-zero entry. (If no such column exists, delete the row). \\
+                                      Now you have one fewer basic artificial var. Delete the corresponding artificial column and repeat until you are in case (i).
+                            \end{enumerate}
+                  \end{itemize}
+        \end{enumerate}
+    \end{minipage}
+\end{multicols*}
+
+\end{document}
