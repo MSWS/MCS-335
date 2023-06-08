@@ -20,7 +20,7 @@
             2  & 1 & 1 & 1 & -1 & 0 \\
             6  & 0 & 1 & 2 & -1 & 1
         \end{tabular}
-        \columnbreak
+        Note that our BFS \(\overline{x}_0^* = [2, 0, 0, 0, 6]\)
         Since \(x_4\) has \(c_k = 0, \forall a_{ik} \leq 0\), we know there is an optimal ray.
         \begin{enumerate}
             \item \(x_2, x_3\) are non-basic and not our optimal ray column, so set those to 0 and solve for the basic variable.
@@ -88,7 +88,7 @@
             \begin{enumerate}
                 \item Pick non-basic var to use as vert axis.
                 \item Solve equations for basic variable.
-                \item Set that equation to = 0.
+                \item Set that equation \(= 0\).
             \end{enumerate}
         \end{minipage}
         \begin{align*}
@@ -143,9 +143,9 @@
                       \item Add \textbf{artificial vars} \(y_i\) as need to get \(I_m\).
                       \item Zero out the artificial OF row.
                       \item Perform simplex algorithm on artificial problem.
-                      \item If optimal artificial OF value > 0, then infeasible.
-                      \item If optimal artificial OF value < 0, you did something wrong.
-                      \item If optimal artificial OF value = 0, there are two cases:
+                      \item If optimal artificial OF value \(> 0\), then infeasible.
+                      \item If optimal artificial OF value \(< 0\), you did something wrong.
+                      \item If optimal artificial OF value \(= 0\), there are two cases:
                             \begin{enumerate}[label=(\roman*)]
                                 \item All artificial vars are non-basic. \\
                                       Delete artificial OF row and replace original OF row. \\
